@@ -5,7 +5,7 @@ provider "aws" {
 data "aws_ami" "os" {
   most_recent = true
   owners      = ["${var.ami_owner}"]
-  name_regex  = "^((?!ecs).)*$"
+  name_regex  = var.ami_owner == "013907871322" ? "^suse-sles-15-sp3-v[0-9]{8}-hvm.*" : ".*"
 
   filter {
     name   = "name"
@@ -82,7 +82,6 @@ module "rke2" {
   rke2_config = <<-EOT
 node-label:
   - "name=server"
-  - "os=rhel8"
 EOT
 
   tags = var.tags
@@ -111,7 +110,6 @@ module "agents" {
   rke2_config = <<-EOT
 node-label:
   - "name=generic"
-  - "os=rhel8"
 EOT
 
   cluster_data = module.rke2.cluster_data
@@ -131,4 +129,9 @@ resource "aws_security_group_rule" "quickstart_ssh" {
 
 output "lb_url" {
   value = module.rke2.server_url
+}
+
+output "rancher_bootstrap_password" {
+  value = module.rke2.rancher_bootstrap_password
+  sensitive = true
 }

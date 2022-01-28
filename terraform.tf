@@ -25,7 +25,7 @@ variable "ami_owner" {
 
 variable "ami_filter_name" {
   type    = string
-  default = "suse-sles-15-sp3
+  default = "suse-sles-15-sp3"
 }
 
 variable "rke2_version" {
@@ -48,7 +48,7 @@ variable "install_rancher" {
 }
 
 variable "rancher_url" {
-  description = "Rancher Access URL. Defaults to loadbalancer url."
+  description = "Rancher Access URL. Defaults to loadbalancer URL."
   type        = string
   default     = ""
 }
