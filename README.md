@@ -11,7 +11,7 @@ git clone https://github.com/samuelattwood/rke2-aws-tf-config.git
 cd rke2-aws-tf-config/
 ```
 
-Update values from variables.tf as needed. Then deploy with:
+Update default values from [variables.tf](variables.tf) as needed. Then deploy with:
 
 ```bash
 export AWS_ACCESS_KEY_ID="yourawsaccesskey"
@@ -32,4 +32,22 @@ Terraform will print two values to console `lb_url` and `rancher_bootstrap_passw
 `rancher_bootstrap_password` is marked as 'sensitive' and may be read with:
 ```bash
 terraform output rancher_bootstrap_password
+```
+
+Terraform will have generated a `.pem` file allowing you to SSH as `ec2-user` to the nodes. The IP or A-records can be retreived from the Rancher UI or the AWS Console.
+
+If you wish to use `kubectl/helm/etc.` via SSH:
+```bash
+ssh -i demo-cluster.pem ec2-user@1.2.3.4
+sudo su -
+export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
+export PATH=${PATH}:/var/lib/rancher/rke2/bin
+
+kubectl get nodes
+NAME                          STATUS   ROLES                       AGE   VERSION
+ip-10-88-1-217.ec2.internal   Ready    <none>                      36m   v1.22.5+rke2r1
+ip-10-88-1-67.ec2.internal    Ready    control-plane,etcd,master   35m   v1.22.5+rke2r1
+ip-10-88-2-46.ec2.internal    Ready    control-plane,etcd,master   36m   v1.22.5+rke2r1
+ip-10-88-3-40.ec2.internal    Ready    <none>                      36m   v1.22.5+rke2r1
+ip-10-88-3-42.ec2.internal    Ready    control-plane,etcd,master   34m   v1.22.5+rke2r1
 ```
